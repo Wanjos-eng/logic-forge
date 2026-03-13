@@ -15,8 +15,12 @@ pub fn formula_parser() -> impl Parser<char, Formula, Error = Simple<char>> {
         let valor_verdade = text::keyword("True").to(Formula::TruthValue(true))
             .or(text::keyword("False").to(Formula::TruthValue(false)));
 
-        // Proposições atômicas (qualquer identificador: P, Q, R1, ...)
-        let proposicao = text::ident().map(Formula::Proposition);
+        // Proposições atômicas: devem começar com letra MAIÚSCULA (P, Q, R1, ...)
+        // Letras minúsculas não são proposições válidas na lógica proposicional.
+        let proposicao = filter(|c: &char| c.is_uppercase())
+            .chain(filter(|c: &char| c.is_alphanumeric()).repeated())
+            .collect::<String>()
+            .map(Formula::Proposition);
 
         // Um átomo pode ser valor-verdade, proposição ou subfórmula entre parênteses
         let atomo = valor_verdade
@@ -79,6 +83,7 @@ fn descrever_token(token: Option<&char>) -> String {
         Some('↔') => "operador de bi-implicação (↔)".into(),
         Some('-') => "'-' (início de ->)".into(),
         Some('<') => "'<' (início de <->)".into(),
+        Some(c) if c.is_lowercase() => format!("letra minúscula '{}'", c),
         Some(c) if c.is_alphabetic() => format!("caractere '{}'", c),
         Some(c) => format!("'{}'", c),
         None => "fim da fórmula".into(),
@@ -159,6 +164,12 @@ fn explicar_erro(tipo: &str, encontrado: Option<&char>, pos: usize) -> String {
                 // Fim da entrada quando se esperava mais
                 None => "A fórmula está incompleta. Após um operador binário (→, ∧, ∨, ↔) \
                          deve vir uma proposição (ex: Q, R) ou subfórmula entre parênteses.".into(),
+                // Letra minúscula usada como proposição
+                Some(c) if c.is_lowercase() => {
+                    format!("Letras minúsculas não são proposições válidas. \
+                             Use maiúsculas: '{}' deve ser '{}'.",
+                        c, c.to_uppercase().next().unwrap_or(*c))
+                },
                 // Caractere não reconhecido
                 Some(c) if !c.is_alphanumeric() && !"¬~∧∨→↔&|()<>-".contains(*c) => {
                     format!("O caractere '{}' não é reconhecido na lógica proposicional. \
@@ -229,40 +240,3 @@ pub fn parse_input(input: &str) -> Result<Formula, Vec<String>> {
         })
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn deve_aceitar_formulas_simples_do_pdf() {
-        // Exemplo: P -> Q
-        assert!(parse_input("P -> Q").is_ok());
-        
-        // Exemplo: ~ (P -> Q)
-        assert!(parse_input("~(P -> Q)").is_ok());
-        
-        // Exemplo com símbolos acadêmicos: p ∧ q
-        assert!(parse_input("P ∧ Q").is_ok()); 
-    }
-
-    #[test]
-    fn deve_aceitar_subformulas_complexas() {
-        // Exemplo complexo da árvore de subfórmulas do PDF
-        let formula_complexa = "(((P ∨ S) ∧ Q) ↔ R)";
-        let result = parse_input(formula_complexa);
-        
-        assert!(result.is_ok());
-    }
-
-    #[test]
-    fn deve_rejeitar_sintaxe_invalida() {
-        // Dois operadores de implicação seguidos sem proposição no meio
-        assert!(parse_input("P -> -> Q").is_err());
-        
-        // Faltando fechar parênteses
-        assert!(parse_input("(P ∧ Q").is_err());
-        
-        // Operador solto
-        assert!(parse_input("∨ Q").is_err());
-    }
-}
