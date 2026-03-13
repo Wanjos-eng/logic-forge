@@ -19,3 +19,19 @@ export interface ValidationResult {
   ast?: Formula;
   errors: string[];
 }
+
+export interface TruthTableRow {
+  interpretation: Record<string, boolean>;
+  result: boolean;
+  subformula_values?: Record<string, boolean>;
+}
+
+export interface TruthTableData {
+  variables: string[];
+  n: number;
+  total_interpretations: number;
+  generated_rows: number;
+  truncated: boolean;
+  resolution_order: string[];
+  table: TruthTableRow[];
+}
