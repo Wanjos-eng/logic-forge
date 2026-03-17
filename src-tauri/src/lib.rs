@@ -2,6 +2,7 @@ pub mod domain;
 pub mod infrastructure;
 
 use crate::domain::ast::Formula;
+use crate::domain::semantic_analysis::SemanticAnalysis;
 use crate::domain::truth_table::generate_truth_table;
 use crate::infrastructure::parser::parse_input;
 
@@ -43,12 +44,24 @@ fn generate_truth_table_command(
     serde_json::to_string(&table).map_err(|e| e.to_string())
 }
 
+/// Comando Tauri que realiza análise semântica baseada na tabela-verdade.
+/// Recebe uma lista de booleanos (resultados de cada linha) e retorna as propriedades semânticas.
+#[tauri::command]
+fn analyze_semantic_command(results: Vec<bool>) -> Result<String, String> {
+    let analysis = SemanticAnalysis::from_results(&results);
+    serde_json::to_string(&analysis).map_err(|e| e.to_string())
+}
+
 /// Ponto de entrada da aplicação Tauri.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![validate_formula, generate_truth_table_command])
+        .invoke_handler(tauri::generate_handler![
+            validate_formula,
+            generate_truth_table_command,
+            analyze_semantic_command
+        ])
         .run(tauri::generate_context!())
         .expect("erro ao iniciar a aplicação tauri");
 }
