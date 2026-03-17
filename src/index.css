@@ -258,6 +258,147 @@
     color: var(--lf-err);
   }
 
+  .lf-sem-badge {
+    border: 1px solid var(--lf-border);
+    background: var(--lf-surface);
+    color: var(--lf-text);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  }
+
+  .lf-sem-badge:hover {
+    transform: translateY(-1px);
+    border-color: var(--lf-accent);
+    background: var(--lf-raised);
+  }
+
+  .lf-sem-badge--tautology {
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.65);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(5, 150, 105, 0.12));
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.16), 0 8px 20px rgba(16, 185, 129, 0.12);
+  }
+
+  .lf-sem-badge--contradiction {
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.65);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.24), rgba(220, 38, 38, 0.12));
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.16), 0 8px 20px rgba(239, 68, 68, 0.12);
+  }
+
+  .lf-sem-badge--contingency {
+    color: #fbbf24;
+    border-color: rgba(245, 158, 11, 0.65);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.24), rgba(217, 119, 6, 0.12));
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.16), 0 8px 20px rgba(245, 158, 11, 0.12);
+  }
+
+  .lf-sem-badge--satisfiable {
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.65);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.24), rgba(37, 99, 235, 0.12));
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.16), 0 8px 20px rgba(59, 130, 246, 0.12);
+  }
+
+  .lf-sem-badge--tautology:hover {
+    border-color: rgba(16, 185, 129, 0.9);
+  }
+
+  .lf-sem-badge--contradiction:hover {
+    border-color: rgba(239, 68, 68, 0.9);
+  }
+
+  .lf-sem-badge--contingency:hover {
+    border-color: rgba(245, 158, 11, 0.9);
+  }
+
+  .lf-sem-badge--satisfiable:hover {
+    border-color: rgba(59, 130, 246, 0.9);
+  }
+
+  .lf-sem-overlay {
+    background: rgba(2, 6, 23, 0.75);
+    backdrop-filter: blur(2px);
+  }
+
+  .lf-sem-modal {
+    background: var(--lf-surface);
+    border: 1px solid var(--lf-border);
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
+    color: var(--lf-text);
+    border-left: 4px solid var(--lf-accent);
+  }
+
+  .lf-sem-modal--tautology {
+    border-left-color: var(--lf-ok);
+  }
+
+  .lf-sem-modal--contradiction {
+    border-left-color: var(--lf-err);
+  }
+
+  .lf-sem-modal--contingency {
+    border-left-color: #f59e0b;
+  }
+
+  .lf-sem-modal--satisfiable {
+    border-left-color: #3b82f6;
+  }
+
+  .lf-sem-title {
+    color: var(--lf-text);
+  }
+
+  .lf-sem-close {
+    color: var(--lf-muted);
+  }
+
+  .lf-sem-close:hover {
+    color: var(--lf-text);
+  }
+
+  .lf-sem-desc {
+    background: var(--lf-raised);
+    border: 1px solid var(--lf-border);
+  }
+
+  .lf-sem-desc-text {
+    color: var(--lf-text);
+  }
+
+  .lf-sem-citation {
+    color: var(--lf-muted);
+  }
+
+  .lf-sem-stat {
+    border: 1px solid var(--lf-border);
+    background: var(--lf-raised);
+  }
+
+  .lf-sem-stat--true {
+    color: #5eead4;
+  }
+
+  .lf-sem-stat--false {
+    color: #fb7185;
+  }
+
+  .lf-sem-total {
+    background: var(--lf-raised);
+    border: 1px solid var(--lf-border);
+    color: var(--lf-text);
+  }
+
+  .lf-sem-ack {
+    background: var(--lf-raised);
+    border: 1px solid var(--lf-border);
+    color: var(--lf-text);
+  }
+
+  .lf-sem-ack:hover {
+    border-color: var(--lf-accent);
+    background: #26344a;
+  }
+
   .lf-status-head {
     display: flex;
     align-items: center;
