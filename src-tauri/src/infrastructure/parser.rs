@@ -15,9 +15,9 @@ pub fn formula_parser() -> impl Parser<char, Formula, Error = Simple<char>> {
         let valor_verdade = text::keyword("True").to(Formula::TruthValue(true))
             .or(text::keyword("False").to(Formula::TruthValue(false)));
 
-        // Proposições atômicas: devem começar com letra MAIÚSCULA (P, Q, R1, ...)
-        // Letras minúsculas não são proposições válidas na lógica proposicional.
-        let proposicao = filter(|c: &char| c.is_uppercase())
+        // Proposições atômicas: podem começar com letra maiúscula ou minúscula
+        // (P, Q, p, q, r1, ...).
+        let proposicao = filter(|c: &char| c.is_alphabetic())
             .chain(filter(|c: &char| c.is_alphanumeric()).repeated())
             .collect::<String>()
             .map(Formula::Proposition);
@@ -83,7 +83,6 @@ fn descrever_token(token: Option<&char>) -> String {
         Some('↔') => "operador de bi-implicação (↔)".into(),
         Some('-') => "'-' (início de ->)".into(),
         Some('<') => "'<' (início de <->)".into(),
-        Some(c) if c.is_lowercase() => format!("letra minúscula '{}'", c),
         Some(c) if c.is_alphabetic() => format!("caractere '{}'", c),
         Some(c) => format!("'{}'", c),
         None => "fim da fórmula".into(),
@@ -121,7 +120,7 @@ fn descrever_esperados(esperados: &[Option<char>]) -> String {
 
     // Se a gramática espera início de subfórmula, diga isso de forma clara
     if espera_subformula(esperados) {
-        descricoes.insert("uma proposição (P, Q, …) ou subfórmula".into());
+        descricoes.insert("uma proposição (P, Q, p, q, …) ou subfórmula".into());
     }
 
     if descricoes.is_empty() {
@@ -164,12 +163,6 @@ fn explicar_erro(tipo: &str, encontrado: Option<&char>, pos: usize) -> String {
                 // Fim da entrada quando se esperava mais
                 None => "A fórmula está incompleta. Após um operador binário (→, ∧, ∨, ↔) \
                          deve vir uma proposição (ex: Q, R) ou subfórmula entre parênteses.".into(),
-                // Letra minúscula usada como proposição
-                Some(c) if c.is_lowercase() => {
-                    format!("Letras minúsculas não são proposições válidas. \
-                             Use maiúsculas: '{}' deve ser '{}'.",
-                        c, c.to_uppercase().next().unwrap_or(*c))
-                },
                 // Caractere não reconhecido
                 Some(c) if !c.is_alphanumeric() && !"¬~∧∨→↔&|()<>-".contains(*c) => {
                     format!("O caractere '{}' não é reconhecido na lógica proposicional. \
