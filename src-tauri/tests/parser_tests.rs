@@ -28,10 +28,10 @@ fn deve_rejeitar_sintaxe_invalida() {
     assert!(parse_input("∨ Q").is_err());
 }
 
-/// Proposições com letra minúscula devem ser rejeitadas.
+/// Proposições com letra minúscula devem ser aceitas.
 #[test]
-fn deve_rejeitar_proposicao_minuscula() {
-    assert!(parse_input("p").is_err());
-    assert!(parse_input("p → Q").is_err());
-    assert!(parse_input("P ∧ q").is_err());
+fn deve_aceitar_proposicao_minuscula() {
+    assert!(parse_input("p").is_ok());
+    assert!(parse_input("p → Q").is_ok());
+    assert!(parse_input("P ∧ q").is_ok());
 }
