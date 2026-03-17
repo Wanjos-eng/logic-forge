@@ -7,8 +7,10 @@ import type { Formula } from '@/domain/types';
 import { calculateLength, formatFormula, getSubformulas } from '@/domain/formula';
 import { parseErrors, type ParseError } from '@/domain/errors';
 import { useTruthTable } from '@/hooks/useTruthTable';
+import { useSemanticAnalysis } from '@/hooks/useSemanticAnalysis';
 import { palette, connColor } from '@/config/palette';
 import { SyntaxTreeView } from './SyntaxTreeView';
+import { SemanticBadges } from './SemanticBadges';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -89,6 +91,7 @@ export function AnalysisPanel({ isValid, ast, errors, formula, fontSize }: Analy
   const chipSize = Math.max(11, Math.round(fontSize * 0.68));
   const parsedErrors = errors.length > 0 ? parseErrors(errors) : [];
   const { data: truthTable, loading: truthLoading, error: truthError } = useTruthTable(ast, true);
+  const { data: semanticAnalysis, loading: semanticLoading, error: semanticError } = useSemanticAnalysis(truthTable);
 
   const [page, setPage] = useState(0);
   const pageSize = 32;
@@ -119,10 +122,12 @@ export function AnalysisPanel({ isValid, ast, errors, formula, fontSize }: Analy
     <div className="lf-panel">
       {/* ── Status ── */}
       {isValid ? (
-        <div className="lf-status lf-status--ok">
-          <CheckCircle2 size={15} />
-          Fórmula Bem Formada (FBF)
-        </div>
+        <>
+          <div className="lf-status lf-status--ok">
+            <CheckCircle2 size={15} />
+            Fórmula Bem Formada (FBF)
+          </div>
+        </>
       ) : (
         parsedErrors.length > 0 && (
           <div className="lf-err-section">
@@ -182,6 +187,12 @@ export function AnalysisPanel({ isValid, ast, errors, formula, fontSize }: Analy
               <span>Tabela-Verdade</span>
               <TableIcon size={14} style={{ color: palette.ok }} />
             </div>
+
+            <SemanticBadges
+              analysis={semanticAnalysis}
+              loading={semanticLoading}
+              error={semanticError}
+            />
 
             {truthLoading && <div className="lf-tt-status">Gerando interpretações...</div>}
             {!truthLoading && truthError && <div className="lf-tt-status lf-tt-status--err">{truthError}</div>}
