@@ -15,6 +15,15 @@ Logic Forge é um aplicativo desktop Tauri + React para construir, validar e ana
 
 O frontend fica em React e o backend Tauri em Rust faz a validação da fórmula, a geração da tabela-verdade e a análise semântica. A interface mostra o resultado dessas etapas em blocos separados para facilitar revisão e ensino.
 
+## Prints da aplicação
+
+### Tela principal
+
+<p align="center">
+	<img src="IMG/print1.png" alt="Tela principal do Logic Forge" width="48%" />
+	<img src="IMG/print2.png" alt="Painel de análise do Logic Forge" width="48%" />
+</p>
+
 ## Instalação
 
 ### Windows
