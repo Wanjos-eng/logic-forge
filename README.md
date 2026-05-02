@@ -1,10 +1,10 @@
 <!-- PROJECT_METADATA
 {
   "title": "Logic Forge",
-  "short_description": "Aplicativo desktop para análise de lógica proposicional: valida fórmulas em tempo real, gera tabelas-verdade e classifica tautologias e contradições.",
-  "primary_stack": ["Rust", "React", "TypeScript", "Tauri"],
+  "short_description": "App desktop Tauri + Rust que analisa fórmulas de lógica proposicional em tempo real: valida sintaxe, gera árvores sintáticas, tabelas-verdade e classifica tautologias.",
+  "primary_stack": ["Rust", "React", "TypeScript", "Tauri", "Vite"],
   "architecture": "Desktop App",
-  "detail_description": "Logic Forge é uma ferramenta desktop construída com Tauri (Rust) e React/TypeScript. O núcleo de parsing e avaliação lógica foi implementado do zero em Rust para máxima performance, enquanto o frontend React entrega feedback visual imediato sobre a validade sintática, árvores de sintaxe, tabelas-verdade completas e classificação de fórmulas (tautologia, contradição, contingência ou satisfazível). O app é distribuído como binário nativo de ~4MB sem necessidade de runtime externo.",
+  "detail_description": "Logic Forge é uma aplicação desktop construída com Tauri v2 onde o diferencial técnico está no parser de lógica proposicional implementado do zero em Rust. O parser usa análise sintática descendente recursiva (recursive descent parser) para construir uma Árvore Sintática Abstrata (AST) das fórmulas — suportando os conectivos ¬, ∧, ∨, →, ↔ com precedência correta e associatividade. A partir da AST, o avaliador gera a tabela-verdade completa para todas as 2^n combinações de variáveis e classifica a fórmula como: Tautologia (sempre verdadeira), Contradição (sempre falsa), Satisfazível (verdadeira para ao menos um caso) ou Contingência (nem tautologia nem contradição). O frontend React recebe os resultados via comandos Tauri tipados em TypeScript, com feedback visual imediato a cada caractere digitado — sem roundtrip de rede. O binário final tem apenas ~4MB e não requer instalação de runtime.",
   "images": ["IMG/print1.png", "IMG/print2.png"],
   "cover_image": "IMG/print1.png",
   "release_url": "https://github.com/Wanjos-eng/logic-forge/releases/tag/v0.1.0"
@@ -13,54 +13,38 @@
 
 # Logic Forge
 
-Aplicativo desktop para construção, validação e análise de fórmulas da lógica proposicional — construído com Tauri (Rust) + React.
+App desktop para análise de lógica proposicional: parser Rust que valida fórmulas, gera árvores sintáticas (AST), tabelas-verdade e classifica tautologias — tudo em tempo real.
 
-## O que ele faz
+## Funcionalidades
 
-- **Validação em tempo real** — feedback imediato sobre a validade sintática da fórmula
-- **Árvore de Sintaxe** — visualização da estrutura da fórmula parsed
-- **Tabela-Verdade completa** — gerada automaticamente para qualquer fórmula
-- **Classificação automática** — tautologia, contradição, contingência ou satisfazível
+- **Validação em tempo real** — feedback imediato a cada caractere digitado
+- **Parser recursivo descendente** — implementado do zero em Rust, sem bibliotecas externas
+- **Árvore Sintática Abstrata (AST)** — visualização da estrutura parseada
+- **Tabela-verdade completa** — gerada para todas as 2^n combinações de variáveis
+- **Classificação automática** — Tautologia / Contradição / Contingência / Satisfazível
 
 ## Stack Técnica
 
 | Camada | Tecnologia |
 |--------|-----------|
-| Backend / Core Lógico | Rust (parser e evaluator customizados) |
+| Parser / Core Lógico | Rust (recursive descent parser, AST, evaluator) |
 | Frontend | React + TypeScript |
-| Bridge Desktop | Tauri v2 |
+| Bridge Desktop | Tauri v2 (comandos tipados TS↔Rust) |
 | Build | Vite |
-
-## Arquitetura
-
-O parser e o evaluador de lógica proposicional foram implementados do zero em Rust, expondo uma API para o frontend via comandos Tauri. Isso garante:
-- Parsing eficiente e sem dependências externas
-- Binário nativo pequeno (~4MB)
-- Multiplataforma: Linux, Windows, macOS
 
 ## Como Executar
 
-### Pré-requisitos
-- Rust + Cargo
-- Node.js 18+
-- Tauri CLI: `cargo install tauri-cli`
-
-### Desenvolvimento
 ```bash
 npm install
-cargo tauri dev
-```
-
-### Build
-```bash
-cargo tauri build
+cargo tauri dev       # Desenvolvimento
+cargo tauri build     # Produção (~4MB, sem runtime)
 ```
 
 ## Download
 
-Baixe o binário mais recente na [página de releases](https://github.com/Wanjos-eng/logic-forge/releases/tag/v0.1.0).
+[⬇ Baixar v0.1.0](https://github.com/Wanjos-eng/logic-forge/releases/tag/v0.1.0)
 
 ## Screenshots
 
-![Logic Forge — Interface principal](./IMG/print1.png)
-![Logic Forge — Tabela-verdade](./IMG/print2.png)
+![Interface principal](./IMG/print1.png)
+![Tabela-verdade](./IMG/print2.png)
